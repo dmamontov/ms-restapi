@@ -48,7 +48,12 @@ $ms = new MSRestApi('admin@xxxx.ru', 'xxxxxxxxxx');
 
 $headerXml = '<?xml version="1.0" encoding="UTF-8"?><%s/>';
 
-$newUom = new SimpleXMLElement(sprintf($headerXml, 'uom'), LIBXML_NOENT |LIBXML_NOCDATA | LIBXML_COMPACT | LIBXML_PARSEHUGE);
+$newUom = new SimpleXMLElement(
+                  sprintf($headerXml, 'uom'),
+                  LIBXML_NOENT | LIBXML_NOCDATA |
+                  LIBXML_COMPACT | LIBXML_PARSEHUGE
+          );
+
 $newUom->addAttribute('favourite', 'false');
 $newUom->addAttribute('name', 'example');
 $newUom->addChild('code', '999');
