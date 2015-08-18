@@ -191,6 +191,11 @@ $uomCreate = $ms->uomCreate($newUom);
 * `customEntityGetList`
 * `customEntityUpdateList`
 * `customEntityDeleteList`
+* `workflowGet`
+* `workflowCreate`
+* `workflowDelete`
+* `workflowGetList`
+* `workflowUpdateList`
 
 ### Documentation
 * `supplyGet`

@@ -3847,6 +3847,100 @@ class MSRestApi
     }
 
     /**
+     * Get workflow.
+     *
+     * @param string $uuid
+     * @return SimpleXMLElement
+     * @access public
+     * @final
+     */
+    final public function workflowGet($uuid)
+    {
+        $this->checkUuid($uuid);
+
+        return $this->curlRequest(sprintf('%s/Workflow/%s', self::URL, $uuid));
+    }
+
+    /**
+     * Create workflow.
+     *
+     * @param SimpleXMLElement $workflow
+     * @return SimpleXMLElement
+     * @access public
+     * @final
+     */
+    final public function workflowCreate(SimpleXMLElement $workflow)
+    {
+        $parameters['data'] = $workflow;
+
+        return $this->curlRequest(sprintf('%s/Workflow', self::URL), self::METHOD_PUT, $parameters);
+    }
+
+    /**
+     * Delete workflow.
+     *
+     * @param string $uuid
+     * @return SimpleXMLElement
+     * @access public
+     * @final
+     */
+    final public function workflowDelete($uuid)
+    {
+        $this->checkUuid($uuid);
+
+        return $this->curlRequest(sprintf('%s/Workflow/%s', self::URL, $uuid), self::METHOD_DELETE);
+    }
+
+    /**
+     * Get list workflow.
+     *
+     * @param array $filter
+     * @param integer $start
+     * @param integer $count
+     * @return SimpleXMLElement
+     * @access public
+     * @final
+     */
+    final public function workflowGetList($filter = array(), $start = 0, $count = 1000)
+    {
+        $parameters['filter'] = $filter;
+        $parameters['start'] = $start;
+        $parameters['count'] = $count;
+
+        return $this->curlRequest(sprintf('%s/Workflow/list', self::URL), self::METHOD_GET, $parameters);
+    }
+
+    /**
+     * Update list workflow.
+     *
+     * @param SimpleXMLElement $workflow
+     * @return SimpleXMLElement
+     * @access public
+     * @final
+     */
+    final public function workflowUpdateList(SimpleXMLElement $workflow)
+    {
+        $parameters['data'] = $workflow;
+
+        return $this->curlRequest(sprintf('%s/Workflow/list/update', self::URL), self::METHOD_PUT, $parameters);
+    }
+
+    /**
+     * Delete list workflow.
+     *
+     * @param SimpleXMLElement $workflow
+     * @return SimpleXMLElement
+     * @access public
+     * @final
+     */
+    final public function workflowDeleteList(SimpleXMLElement $workflow)
+    {
+        $parameters['data'] = $workflow;
+
+        return $this->curlRequest(sprintf('%s/Workflow/list/delete', self::URL), self::METHOD_POST, $parameters);
+    }
+
+    /**
      * Execution of the request
      * 
      * @param string $url
