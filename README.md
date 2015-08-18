@@ -7,9 +7,7 @@ Moy Sklad API Client
 
 This class can Manage accounts of Moy Sklad using its REST API.
 
-It can obtain an authorization token for a given account, so it can send HTTP requests to the [Moy Sklad Rest API](http://wiki.moysklad.ru/wiki/REST-%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81_%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85) in order to perform several types of operations.
-
-Currently it can the current accounts, set and get contacts, contact links, leads, companies, tasks, notes and fields.
+It can obtain an authorization password for a given account, so it can send HTTP requests to the [Moy Sklad Rest API](http://wiki.moysklad.ru/wiki/REST-%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81_%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85) in order to perform several types of operations.
 
 ## Requirements
 * PHP version >5.0
