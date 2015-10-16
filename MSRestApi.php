@@ -3970,6 +3970,10 @@ class MSRestApi
         curl_setopt($this->curl, CURLOPT_FAILONERROR, false);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($this->curl, CURLOPT_POST, false);
+        curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, array());
+        curl_setopt($this->curl, CURLOPT_HTTPHEADER, array());
 
         if ($method == self::METHOD_POST) {
             curl_setopt($this->curl, CURLOPT_POST, true);
