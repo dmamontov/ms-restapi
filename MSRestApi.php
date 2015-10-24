@@ -38,7 +38,7 @@
  * @author    Dmitry Mamontov <d.slonyara@gmail.com>
  * @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @since     File available since Release 1.0.2
+ * @since     File available since Release 1.0.3
  */
 /**
  * MSRestApi - The main class
@@ -46,10 +46,10 @@
  * @author    Dmitry Mamontov <d.slonyara@gmail.com>
  * @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version   Release: 1.0.2
+ * @version   Release: 1.0.3
  * @link      https://github.com/dmamontov/ms-restapi/
  * @link      http://wiki.moysklad.ru/wiki/REST-%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81_%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85
- * @since     Class available since Release 1.0.2
+ * @since     Class available since Release 1.0.3
  */
 
 class MSRestApi
@@ -4008,7 +4008,17 @@ class MSRestApi
             throw new Exception('Object not found.', $statusCode);
         }
 
+        libxml_use_internal_errors(true);
         $result = simplexml_load_string($response);
+
+        if ($result == false) {
+        	$errors = '';
+            foreach(libxml_get_errors() as $error) {
+                $errors .= "{$error->message}\n";
+            }
+
+            throw new Exception($errors, $statusCode);
+        }
 
         return $result;
     }
