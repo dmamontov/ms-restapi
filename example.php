@@ -1,7 +1,7 @@
 <?php
 require 'MSRestApi.php';
 
-$ms = new MSRestApi('admin@xxxx.ru', 'xxxxxxxxxx');
+$ms = new MSRestApi('admin@mrjones_ru', '8e0b79d704f3');
 
 $uuid = '7e4b5318-44df-11e5-7a07-673d0083fdac';
 $uomGet = $ms->uomGet($uuid);
@@ -19,5 +19,5 @@ $uomCreate = $ms->uomCreate($newUom);
 
 $uomDelete = $ms->uomDelete($uuid);
 
-$uomGetList = $ms->uomGetList();
+$uomGetList = $ms->uomGetList(array('code' => '<=111'));
 ?>
