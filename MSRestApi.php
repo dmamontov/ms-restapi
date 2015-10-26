@@ -55,7 +55,7 @@
 class MSRestApi
 {
     /*
-     * URL fro RestAPI
+     * URL from RestAPI
      */
     const URL = 'https://online.moysklad.ru/exchange/rest/ms/xml';
 
