@@ -34,7 +34,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   amo-restapi
+ * @package   ms-restapi
  * @author    Dmitry Mamontov <d.slonyara@gmail.com>
  * @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -4012,7 +4012,7 @@ class MSRestApi
         $result = simplexml_load_string($response);
 
         if ($result == false) {
-        	$errors = '';
+            $errors = '';
             foreach(libxml_get_errors() as $error) {
                 $errors .= "{$error->message}\n";
             }
