@@ -38,11 +38,7 @@
  * @author    Dmitry Mamontov <d.slonyara@gmail.com>
  * @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-<<<<<<< HEAD
  * @since     File available since Release 1.1.1
-=======
- * @since     File available since Release 1.0.3
->>>>>>> parent of 89101df... add parser errors
  */
 /**
  * MSRestApi - The main class
@@ -59,7 +55,7 @@
 class MSRestApi
 {
     /*
-     * URL from RestAPI
+     * URL fro RestAPI
      */
     const URL = 'https://online.moysklad.ru/exchange/rest/ms/xml';
 
@@ -3952,7 +3948,8 @@ class MSRestApi
      * @param array $parameters
      * @param integer $timeout
      * @return mixed
-     * @throws Exception
+     * @throws CurlException
+     * @throws MSException
      * @access protected
      */
     protected function curlRequest($url, $method = 'GET', $parameters = null, $timeout = 300)
@@ -3968,7 +3965,7 @@ class MSRestApi
         }
 
         //Set general arguments
-        curl_setopt($this->curl, CURLOPT_USERAGENT, 'MS-API-client/1.0');
+        curl_setopt($this->curl, CURLOPT_USERAGENT, 'MS-API-client/1.1');
         curl_setopt($this->curl, CURLOPT_USERPWD, "{$this->login}:{$this->password}");
         curl_setopt($this->curl, CURLOPT_URL, $url);
         curl_setopt($this->curl, CURLOPT_FAILONERROR, false);
@@ -4005,26 +4002,59 @@ class MSRestApi
         $error = curl_error($this->curl);
 
         if ($errno) {
-            throw new Exception($error, $errno);
+            throw new CurlException($error, $errno);
         }
+
+        $result = $this->getResult($response);
 
         if ($statusCode >= 400) {
-            throw new Exception('Object not found.', $statusCode);
-        }
-
-        libxml_use_internal_errors(true);
-        $result = simplexml_load_string($response);
-
-        if ($result == false) {
-            $errors = '';
-            foreach(libxml_get_errors() as $error) {
-                $errors .= "{$error->message}\n";
-            }
-
-            throw new Exception($errors, $statusCode);
+            throw new MSException($this->getError($result), $statusCode);
         }
 
         return $result;
+    }
+
+    /**
+     * Gets the query result.
+     *
+     * @param string $response
+     * @return SimpleXMLElement|DOMDocument
+     * @access private
+     */
+    private function getResult($response)
+    {
+        libxml_use_internal_errors(true);
+        $result = simplexml_load_string($response);
+
+        if (!$result) {
+            $document = new DOMDocument();
+            $document->loadHTML($response);
+            $result = $this->clearDomDocument($document);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get error.
+     * 
+     * @param SimpleXMLElement|DOMDocument $result
+     * @return string
+     * @access private
+     */
+    private function getError($result)
+    {
+        $error = 'Internal error.';
+        if ($result instanceof DOMDocument) {
+            $error = strip_tags($result->textContent);
+        } elseif (count($result->message) > 0) {
+            $error = '';
+            foreach ($result->message as $message) {
+                $error .= "{$message}\n";
+            }
+        }
+
+        return $error;
     }
 
     /**
@@ -4032,6 +4062,7 @@ class MSRestApi
      *
      * @param array $parameters
      * @return string
+     * @access private
      */
     private function httpBuildQuery($parameters)
     {
@@ -4048,10 +4079,32 @@ class MSRestApi
     }
 
     /**
+     * It clears the document from the trash.
+     *
+     * @param DOMDocument $document
+     * @return DOMDocument
+     * @access private
+     */
+    private function clearDomDocument(DOMDocument $document)
+    {
+        $tags = array('head', 'h1', 'h3');
+
+        foreach ($tags as $tag) {
+            $element = $document->getElementsByTagName($tag);
+            if ($element->length > 0) {
+                $element->item(0)->parentNode->removeChild($element->item(0));
+            }
+        }
+
+        return $document;
+    }
+
+    /**
      * Check uuid.
      * 
      * @param string $uuid
      * @throws InvalidArgumentException
+     * @access private
      */
     private function checkUuid($uuid)
     {
@@ -4062,9 +4115,26 @@ class MSRestApi
 
     /**
      * Do some actions when instance destroyed
+     * @access public
      */
     public function __destruct()
     {
         curl_close($this->curl);
     }
+}
+
+/**
+ * Exception for CURL
+ * @author Dmitry Mamontov <d.slonyara@gmail.com>
+ */
+class CurlException extends RuntimeException
+{
+}
+
+/**
+ * Exception for Moy Sklad
+ * @author Dmitry Mamontov <d.slonyara@gmail.com>
+ */
+class MSException extends RuntimeException
+{
 }
