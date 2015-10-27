@@ -38,7 +38,7 @@
  * @author    Dmitry Mamontov <d.slonyara@gmail.com>
  * @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @since     File available since Release 1.1.1
+ * @since     File available since Release 1.1.2
  */
 /**
  * MSRestApi - The main class
@@ -46,20 +46,20 @@
  * @author    Dmitry Mamontov <d.slonyara@gmail.com>
  * @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version   Release: 1.1.1
+ * @version   Release: 1.1.2
  * @link      https://github.com/dmamontov/ms-restapi/
  * @link      http://wiki.moysklad.ru/wiki/REST-%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81_%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85
- * @since     Class available since Release 1.1.1
+ * @since     Class available since Release 1.1.2
  */
 
 class MSRestApi
 {
-    /*
+    /**
      * URL from RestAPI
      */
     const URL = 'https://online.moysklad.ru/exchange/rest/ms/xml';
 
-    /*
+    /**
      * Methods
      */
     const METHOD_GET = 'GET';
@@ -83,8 +83,17 @@ class MSRestApi
 
     /**
      * Curl instance
+     * @var resource
+     * @access protected
      */
     protected $curl;
+
+    /**
+     * Curl timeout
+     * @var integer
+     * @access protected
+     */
+    protected $timeout = 300;
 
     /**
      * Class constructor
@@ -3952,7 +3961,7 @@ class MSRestApi
      * @throws MSException
      * @access protected
      */
-    protected function curlRequest($url, $method = 'GET', $parameters = null, $timeout = 300)
+    protected function curlRequest($url, $method = 'GET', $parameters = null)
     {
         set_time_limit(0);
 
@@ -3970,7 +3979,7 @@ class MSRestApi
         curl_setopt($this->curl, CURLOPT_URL, $url);
         curl_setopt($this->curl, CURLOPT_FAILONERROR, false);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->curl, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($this->curl, CURLOPT_TIMEOUT, $this->getTimeout());
         curl_setopt($this->curl, CURLOPT_POST, false);
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, array());
@@ -4121,6 +4130,27 @@ class MSRestApi
     {
         curl_close($this->curl);
     }
+
+    /**
+     * @return integer
+     * @access public
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * @param integer $timeout
+     * @return MSRestApi
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+ 
 }
 
 /**
